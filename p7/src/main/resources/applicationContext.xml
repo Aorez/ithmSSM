@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+<!--    从service开始配置-->
+<!--    <bean id="accountService" class="com.aorez.service.impl.AccountServiceImpl">-->
+<!--        <property name="accountDao" ref="accountDao"/>-->
+<!--    </bean>-->
+<!--    service需要dao-->
+<!--    <bean id="accountDao" class="com.aorez.dao.impl.AccountDaoImpl">-->
+<!--        <property name="jdbcTemplate" ref="jdbcTemplate"/>-->
+<!--    </bean>-->
+<!--    dao需要jdbctemplate-->
+    <bean class="org.springframework.jdbc.core.JdbcTemplate" id="jdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+<!--    jdbctemplate需要数据源-->
+    <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="dataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/spring"/>
+        <property name="user" value="root"/>
+        <property name="password" value="root221899"/>
+    </bean>
+
+<!--    对aop而言-->
+<!--    service是目标对象-->
+<!--    事务控制是通知增强-->
+<!--    平台事务管理器接口的实现类-->
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+<!--    事务的通知增强还需配置-->
+<!--    <tx:advice transaction-manager="transactionManager" id="txAdvice">-->
+<!--        <tx:attributes>-->
+<!--            <tx:method name="transfer" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false"/>-->
+<!--        </tx:attributes>-->
+<!--    </tx:advice>-->
+<!--    织入-->
+<!--    <aop:config>-->
+<!--&lt;!&ndash;        事务的aop和普通的aop标签不一样，事务的切点是service中的所有&ndash;&gt;-->
+<!--&lt;!&ndash;        注释掉，取消事务的织入，就没有事务，account的数据在除零异常发生后就不一致了&ndash;&gt;-->
+<!--        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.aorez.service.impl.*.*(..))"/>-->
+<!--    </aop:config>-->
+
+<!--    注解方式配置事务所需要-->
+<!--    注解驱动-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+<!--    注解所需要的包扫描-->
+    <context:component-scan base-package="com.aorez"/>
+
+</beans>

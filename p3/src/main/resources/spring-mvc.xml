@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+<!--    写下去之后，可以让idea自动导入context命名空间-->
+<!--    <context:component-scan base-package="com.aorez.controller"/>-->
+<!--    SpringMVC的xml配置文件，包扫描，才能识别到controller，SpringMVC和Spring的配置文件应该分开-->
+<!--    另一种方式写组件扫描，expression是一个注解的类-->
+    <context:component-scan base-package="com.aorez">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+<!--    配置内部视图解析器的前缀和后缀，可以用于组装url-->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/user/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+<!--    使用SpringMVC中的json工具-->
+<!--    在Controller的方法中就可以直接返回对象或集合，不用手动转json-->
+<!--    可以不写id-->
+<!--    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">-->
+<!--        <property name="messageConverters">-->
+<!--            <list>-->
+<!--                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+<!--    让SpringMVC自动配置好上面的这个适配器类-->
+<!--    注解驱动-->
+<!--    <mvc:annotation-driven/>-->
+
+<!--    jsp默认可以访问到，但是.js的东西访问不到，所以要开放权限-->
+<!--    限制访问的应该是SpringMVC-->
+<!--    <mvc:resources mapping="/js/**" location="/js/"/>-->
+<!--    如果是这样写，浏览器url中访问/test/jquery-3.3.1.js，也可以读取到该文件-->
+<!--    <mvc:resources mapping="/test/**" location="/js/"/>-->
+<!--    也可以用这种方式，使tomcat作为处理器-->
+<!--    tomcat对很多资源都放行-->
+    <mvc:default-servlet-handler/>
+
+<!--    配置类型转换器-->
+    <bean id="conversionServiceFactoryBean" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="com.aorez.converter.DateConverter"/>
+            </list>
+        </property>
+    </bean>
+
+<!--    之前的注解驱动-->
+<!--    配置类型转换器需要加conversion-service-->
+<!--    配置后日期只能用自定义格式-->
+    <mvc:annotation-driven conversion-service="conversionServiceFactoryBean"/>
+
+<!--    配置文件上传解析器-->
+<!--    id如果是别的，则接收到的数据和形参匹配不了，输出后都null-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="5000000"/>
+        <property name="maxUploadSizePerFile" value="5000000"/>
+    </bean>
+
+</beans>

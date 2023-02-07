@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+<!--    目标对象-->
+    <bean class="com.aorez.aop.Target" id="target"/>
+<!--    切面对象-->
+    <bean class="com.aorez.aop.Aspect" id="aspect"/>
+
+<!--    织入，将切点和增强编织到一起-->
+    <aop:config>
+<!--        声明哪个切面-->
+        <aop:aspect ref="aspect">
+<!--            切面中的哪个方法用于通知，以及切点在哪里-->
+<!--            <aop:before method="before" pointcut="execution(public void com.aorez.aop.Target.save())"/>-->
+<!--            测试多种写法以及多种通知增强类型-->
+<!--            <aop:before method="before" pointcut="execution(* com.aorez.aop.*.*(..))"/>-->
+<!--            <aop:after-returning method="afterReturning" pointcut="execution(* com.aorez.aop.*.*(..))"/>-->
+<!--            <aop:around method="around" pointcut="execution(* com.aorez.aop.*.*(..))"/>-->
+<!--            <aop:after-throwing method="afterThrowing" pointcut="execution(* com.aorez.aop.*.*(..))"/>-->
+<!--            <aop:after method="after" pointcut="execution(* com.aorez.aop.*.*(..))"/>-->
+            <aop:pointcut id="pointcut1" expression="execution(* com.aorez.aop.*.*(..))"/>
+            <aop:before method="before" pointcut-ref="pointcut1"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>

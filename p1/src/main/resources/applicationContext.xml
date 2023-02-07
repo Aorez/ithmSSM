@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!--    xmlns:p是p命名空间注入，和set方法注入一样，不用写property标签，简化写法-->
+
+<!--    <bean id="userDao" class="com.aorez.dao.impl.UserDaoImpl"/>-->
+
+<!--    测试Bean标签scope属性-->
+<!--    <bean id="userDao" class="com.aorez.dao.impl.UserDaoImpl" scope="singleton"/>-->
+<!--    <bean id="userDao" class="com.aorez.dao.impl.UserDaoImpl" scope="prototype"/>-->
+
+<!--    测试init属性和destroy属性-->
+<!--    <bean id="userDao" class="com.aorez.dao.impl.UserDaoImpl" init-method="init" destroy-method="destroy"/>-->
+
+<!--    测试工厂方法实例化-->
+<!--    静态-->
+<!--    <bean id="userDao" class="com.aorez.factory.StaticFactory" factory-method="getUserDao"/>-->
+<!--    动态-->
+<!--    <bean id="factory" class="com.aorez.factory.DynamicFactory"/>-->
+<!--    <bean id="userDao" factory-bean="factory" factory-method="getUserDao"/>-->
+
+<!--    测试Service类写到Bean标签中-->
+<!--    <bean id="userService" class="com.aorez.service.impl.UserServiceImpl"/>-->
+
+<!--    测试Service类和Dao类提前绑定好，而不是各自获取，然后在代码中进行组合-->
+<!--    <bean id="userService" class="com.aorez.service.impl.UserServiceImpl2">-->
+<!--        <property name="userDao" ref="userDao"/>-->
+<!--    </bean>-->
+
+<!--    p命名空间-->
+<!--    <bean id="userService" class="com.aorez.service.impl.UserServiceImpl2" p:userDao-ref="userDao"/>-->
+
+<!--    set方法使UserService在Spring内部绑定UserDao-->
+<!--    <bean id="userService" class="com.aorez.service.impl.UserServiceImpl3">-->
+<!--        <constructor-arg name="u" ref="userDao"/>-->
+<!--    </bean>-->
+
+<!--    测试类中含有普通数据类型-->
+<!--    <bean id="userDao" class="com.aorez.dao.impl.UserDaoImpl3">-->
+<!--        <property name="age" value="18"/>-->
+<!--        <property name="username" value="张三"/>-->
+<!--    </bean>-->
+
+<!--    测试类中含有集合类型-->
+    <bean id="userDao" class="com.aorez.dao.impl.UserDaoImpl3_8">
+        <property name="strings">
+            <list>
+                <value>str1</value>
+                <value>str2</value>
+                <value>str3</value>
+            </list>
+        </property>
+        <property name="userMap">
+            <map>
+                <entry key="user1" value-ref="user1"/>
+                <entry key="user2" value-ref="user2"/>
+            </map>
+        </property>
+        <property name="properties">
+            <props>
+                <prop key="prop1">prop1</prop>
+                <prop key="prop2">prop2</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="user1" class="com.aorez.domain.User3_8">
+        <property name="name" value="user name1"/>
+        <property name="addr" value="user addr1"/>
+    </bean>
+    <bean id="user2" class="com.aorez.domain.User3_8">
+        <property name="name" value="user name2"/>
+        <property name="addr" value="user addr2"/>
+    </bean>
+    <bean id="userService" class="com.aorez.service.impl.UserServiceImpl3_8">
+        <constructor-arg name="u" ref="userDao"/>
+    </bean>
+
+    <import resource="applicationContext-product.xml"/>
+
+</beans>
